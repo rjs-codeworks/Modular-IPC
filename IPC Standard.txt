@@ -1,0 +1,31 @@
+Initializing child processes:
+
+send ipc in this format: {
+                          channel : [name of communication channel],
+                          name : [name of process],
+                          type : "DEFINE",
+                          target : "INIT"
+                          }
+
+--------------------------------------------------------------------------------
+
+IPC are to be passed as following:
+
+... -> .send({
+
+header : {name : [name of the target process], channel : [the target channel]},
+data : {type : [message type], target : [mostly commonly ignored, only used for filtering. Set to "main" as default.], data : [the data to send], author : {name : [name of the sending process], channel : [channel of the sending process]}}
+
+})
+
+Only the "data" object is passed on to the target.
+
+--------------------------------------------------------------------------------
+
+Example ipc:
+(from child to child process)(from process "test" (channel "testc") to process "test2" (channel "testc2"))
+
+process.send({header:{name: "test2", channel: "testc2"},
+data:{type:"internal",target:"main",data:"this is a test message", author: {name : "test", channel : "testc2"}}});
+
+accessing the data from example: msg.data.data
